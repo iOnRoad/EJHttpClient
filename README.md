@@ -163,7 +163,7 @@ MJCodingImplementation
 分析：LoginRequestModel需要实现EJHttpRequestDelegate协议，该协议中定义了 每个请求所需要的基本信息配置。
 
 如`ej_requestURLString`指定该请求的URL。  
-如`ej_responseClassName` 指定该请求对应的响应参数Model的类名。它将会自动将请求参数转化为该类的对象并给其属性赋值。
+如`ej_responseClassName` 指定该请求对应的响应参数Model的类名。它将会自动将请求参数转化为该类的对象并给其属性赋值。  
 如`ej_showLoading`,`ej_loadingMessage`,`ej_loadingContainerView`和`ej_endLoadingWhenFinished`是针对加载符的配置，分别标识是否显示加载符，加载符的文案是什么，显示在哪个View上，当请求结束时，是否结束加载符的显示。  
 如`ej_showErrorMessage`标识是否显示错误提示。  
 如`ej_ignoreDuplicateRequest`标识有多次请求的情况下，是否忽略重复多余的请求。
