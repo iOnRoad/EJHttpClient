@@ -1,0 +1,59 @@
+PODS:
+  - AFgzipRequestSerializer (0.0.2):
+    - AFNetworking (~> 2.0)
+    - Godzippa (~> 1.0)
+  - AFNetworking (2.6.3):
+    - AFNetworking/NSURLConnection (= 2.6.3)
+    - AFNetworking/NSURLSession (= 2.6.3)
+    - AFNetworking/Reachability (= 2.6.3)
+    - AFNetworking/Security (= 2.6.3)
+    - AFNetworking/Serialization (= 2.6.3)
+    - AFNetworking/UIKit (= 2.6.3)
+  - AFNetworking/NSURLConnection (2.6.3):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.6.3):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.6.3)
+  - AFNetworking/Security (2.6.3)
+  - AFNetworking/Serialization (2.6.3)
+  - AFNetworking/UIKit (2.6.3):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - EJHttpClient (1.0.0):
+    - EJHttpClient/EJHttpClient (= 1.0.0)
+  - EJHttpClient/EJHttpClient (1.0.0):
+    - AFgzipRequestSerializer (~> 0.0.2)
+    - AFNetworking (~> 2.6.3)
+    - MJExtension (~> 3.0.10)
+    - Reachability (~> 3.2)
+  - Godzippa (1.1.0)
+  - MJExtension (3.0.10)
+  - Reachability (3.2)
+
+DEPENDENCIES:
+  - EJHttpClient (from `https://github.com/iOnRoad/EJHttpClient.git`)
+
+EXTERNAL SOURCES:
+  EJHttpClient:
+    :git: https://github.com/iOnRoad/EJHttpClient.git
+
+CHECKOUT OPTIONS:
+  EJHttpClient:
+    :commit: ca3d8f4175135ee773458888d7ec825fcff8308b
+    :git: https://github.com/iOnRoad/EJHttpClient.git
+
+SPEC CHECKSUMS:
+  AFgzipRequestSerializer: 329638fc8ed023a15188dc03dd2f1a930da30ea4
+  AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
+  EJHttpClient: 8398cf4adaa006d1e2ea89c146a239aaae0e4817
+  Godzippa: 21621e8ddc2f1521db473a72b48148c3f0e79d76
+  MJExtension: d86aacb740c87519d20e3cca55b6fa4be6cc7548
+  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+
+PODFILE CHECKSUM: 29b71c1dcde4a061d96384b22412c00b797c8066
+
+COCOAPODS: 1.0.1

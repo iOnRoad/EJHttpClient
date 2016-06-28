@@ -13,9 +13,17 @@
 		55C4BC441D22156A00A56D94 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 55C4BC421D22156A00A56D94 /* Main.storyboard */; };
 		55C4BC461D22156A00A56D94 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55C4BC451D22156A00A56D94 /* Assets.xcassets */; };
 		55C4BC491D22156A00A56D94 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 55C4BC471D22156A00A56D94 /* LaunchScreen.storyboard */; };
+		55C4BC531D221DAC00A56D94 /* CommonRequestModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C4BC521D221DAC00A56D94 /* CommonRequestModel.m */; };
+		55C4BC561D221DBE00A56D94 /* CommonResponseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C4BC551D221DBE00A56D94 /* CommonResponseModel.m */; };
+		55C4BC591D221DD300A56D94 /* LoginRequestModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C4BC581D221DD300A56D94 /* LoginRequestModel.m */; };
+		55C4BC5C1D221DDF00A56D94 /* LoginResponseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C4BC5B1D221DDF00A56D94 /* LoginResponseModel.m */; };
+		55C4BC5F1D221FD900A56D94 /* ResponseInterceptorModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C4BC5E1D221FD900A56D94 /* ResponseInterceptorModel.m */; };
+		AD8FC0DC357452EA29D90728 /* libPods-EJHttpClientDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC64DACDB649E667FCE96C67 /* libPods-EJHttpClientDemo.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2548B8876071BE7D119CE2D6 /* Pods-EJHttpClientDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EJHttpClientDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-EJHttpClientDemo/Pods-EJHttpClientDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		2D87064E8D8E34397D2D4362 /* Pods-EJHttpClientDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EJHttpClientDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-EJHttpClientDemo/Pods-EJHttpClientDemo.release.xcconfig"; sourceTree = "<group>"; };
 		55C4BC361D22156A00A56D94 /* EJHttpClientDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EJHttpClientDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		55C4BC3A1D22156A00A56D94 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		55C4BC3C1D22156A00A56D94 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -26,6 +34,17 @@
 		55C4BC451D22156A00A56D94 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		55C4BC481D22156A00A56D94 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		55C4BC4A1D22156A00A56D94 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		55C4BC511D221DAC00A56D94 /* CommonRequestModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonRequestModel.h; sourceTree = "<group>"; };
+		55C4BC521D221DAC00A56D94 /* CommonRequestModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonRequestModel.m; sourceTree = "<group>"; };
+		55C4BC541D221DBE00A56D94 /* CommonResponseModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonResponseModel.h; sourceTree = "<group>"; };
+		55C4BC551D221DBE00A56D94 /* CommonResponseModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonResponseModel.m; sourceTree = "<group>"; };
+		55C4BC571D221DD300A56D94 /* LoginRequestModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginRequestModel.h; sourceTree = "<group>"; };
+		55C4BC581D221DD300A56D94 /* LoginRequestModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginRequestModel.m; sourceTree = "<group>"; };
+		55C4BC5A1D221DDF00A56D94 /* LoginResponseModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginResponseModel.h; sourceTree = "<group>"; };
+		55C4BC5B1D221DDF00A56D94 /* LoginResponseModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginResponseModel.m; sourceTree = "<group>"; };
+		55C4BC5D1D221FD900A56D94 /* ResponseInterceptorModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResponseInterceptorModel.h; sourceTree = "<group>"; };
+		55C4BC5E1D221FD900A56D94 /* ResponseInterceptorModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResponseInterceptorModel.m; sourceTree = "<group>"; };
+		DC64DACDB649E667FCE96C67 /* libPods-EJHttpClientDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-EJHttpClientDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,17 +52,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD8FC0DC357452EA29D90728 /* libPods-EJHttpClientDemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4A9DF2C660FA1417B8BA9F2C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2548B8876071BE7D119CE2D6 /* Pods-EJHttpClientDemo.debug.xcconfig */,
+				2D87064E8D8E34397D2D4362 /* Pods-EJHttpClientDemo.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		55C4BC2D1D22156A00A56D94 = {
 			isa = PBXGroup;
 			children = (
 				55C4BC381D22156A00A56D94 /* EJHttpClientDemo */,
 				55C4BC371D22156A00A56D94 /* Products */,
+				4A9DF2C660FA1417B8BA9F2C /* Pods */,
+				E912BD3F849DB66BA189D8A1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -62,6 +93,7 @@
 				55C4BC3D1D22156A00A56D94 /* AppDelegate.m */,
 				55C4BC3F1D22156A00A56D94 /* ViewController.h */,
 				55C4BC401D22156A00A56D94 /* ViewController.m */,
+				55C4BC501D221D9500A56D94 /* Req&Resp */,
 				55C4BC421D22156A00A56D94 /* Main.storyboard */,
 				55C4BC451D22156A00A56D94 /* Assets.xcassets */,
 				55C4BC471D22156A00A56D94 /* LaunchScreen.storyboard */,
@@ -79,6 +111,31 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		55C4BC501D221D9500A56D94 /* Req&Resp */ = {
+			isa = PBXGroup;
+			children = (
+				55C4BC511D221DAC00A56D94 /* CommonRequestModel.h */,
+				55C4BC521D221DAC00A56D94 /* CommonRequestModel.m */,
+				55C4BC541D221DBE00A56D94 /* CommonResponseModel.h */,
+				55C4BC551D221DBE00A56D94 /* CommonResponseModel.m */,
+				55C4BC571D221DD300A56D94 /* LoginRequestModel.h */,
+				55C4BC581D221DD300A56D94 /* LoginRequestModel.m */,
+				55C4BC5A1D221DDF00A56D94 /* LoginResponseModel.h */,
+				55C4BC5B1D221DDF00A56D94 /* LoginResponseModel.m */,
+				55C4BC5D1D221FD900A56D94 /* ResponseInterceptorModel.h */,
+				55C4BC5E1D221FD900A56D94 /* ResponseInterceptorModel.m */,
+			);
+			path = "Req&Resp";
+			sourceTree = "<group>";
+		};
+		E912BD3F849DB66BA189D8A1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DC64DACDB649E667FCE96C67 /* libPods-EJHttpClientDemo.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -86,9 +143,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 55C4BC4D1D22156A00A56D94 /* Build configuration list for PBXNativeTarget "EJHttpClientDemo" */;
 			buildPhases = (
+				009645A23E8FB6F0F137485C /* [CP] Check Pods Manifest.lock */,
 				55C4BC321D22156A00A56D94 /* Sources */,
 				55C4BC331D22156A00A56D94 /* Frameworks */,
 				55C4BC341D22156A00A56D94 /* Resources */,
+				1A177FCDA736A3C72B1EBA48 /* [CP] Embed Pods Frameworks */,
+				DE5BA458DFC38060BDA2EB09 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -144,14 +204,67 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		009645A23E8FB6F0F137485C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		1A177FCDA736A3C72B1EBA48 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-EJHttpClientDemo/Pods-EJHttpClientDemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DE5BA458DFC38060BDA2EB09 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-EJHttpClientDemo/Pods-EJHttpClientDemo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		55C4BC321D22156A00A56D94 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				55C4BC411D22156A00A56D94 /* ViewController.m in Sources */,
+				55C4BC561D221DBE00A56D94 /* CommonResponseModel.m in Sources */,
 				55C4BC3E1D22156A00A56D94 /* AppDelegate.m in Sources */,
+				55C4BC531D221DAC00A56D94 /* CommonRequestModel.m in Sources */,
 				55C4BC3B1D22156A00A56D94 /* main.m in Sources */,
+				55C4BC5C1D221DDF00A56D94 /* LoginResponseModel.m in Sources */,
+				55C4BC5F1D221FD900A56D94 /* ResponseInterceptorModel.m in Sources */,
+				55C4BC591D221DD300A56D94 /* LoginRequestModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,6 +374,7 @@
 		};
 		55C4BC4E1D22156A00A56D94 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2548B8876071BE7D119CE2D6 /* Pods-EJHttpClientDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = EJHttpClientDemo/Info.plist;
@@ -272,6 +386,7 @@
 		};
 		55C4BC4F1D22156A00A56D94 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2D87064E8D8E34397D2D4362 /* Pods-EJHttpClientDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = EJHttpClientDemo/Info.plist;
@@ -300,6 +415,7 @@
 				55C4BC4F1D22156A00A56D94 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

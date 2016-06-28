@@ -7,6 +7,9 @@
 //
 
 #import "ViewController.h"
+#import "EJHttpClient.h"
+#import "LoginRequestModel.h"
+#import "LoginResponseModel.h"
 
 @interface ViewController ()
 
@@ -17,6 +20,27 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    LoginRequestModel *model = [LoginRequestModel new];
+    model.username = @"admin";
+    model.password = @"123456";
+    
+    [[EJHttpClient shared] ej_requestPostParamObject:model responseHandler:^(id respObject, BOOL success) {
+        if(success){
+            LoginResponseModel *respModel = (LoginResponseModel *)respObject;
+            NSLog(@"username:%@",respModel.username);
+            NSLog(@"userToken:%@",respModel.userToken);
+        }
+    }];
+    
+    //第二种方式
+    [[EJHttpClient shared] ej_requestWithURLString:@"http://www.test.com/user/register.json" method:POST param:@{@"username":@"admin",@"password":@"123456"} responseHandler:^(NSDictionary *param, NSError *error, BOOL isInterceptor) {
+        if(isInterceptor){
+            //处理拦截事件
+        }
+        if(!error){
+            NSLog(@"param:%@",param);
+        }
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
