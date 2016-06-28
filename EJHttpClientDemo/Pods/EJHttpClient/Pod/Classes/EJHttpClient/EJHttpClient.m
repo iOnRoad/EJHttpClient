@@ -314,7 +314,8 @@ static EJHttpClient *ej_sharedHttpClient = nil;
             if(!responseResult){
                 [self ej_showErrorMessage:responseErrorMsg withRequest:request response:(id<EJHttpResponseDelegate>)cmnObj];
             }
-        } else if(bizObj && [bizObj conformsToProtocol:@protocol(EJHttpResponseDelegate)]){
+        }
+        if(bizObj && [bizObj conformsToProtocol:@protocol(EJHttpResponseDelegate)]){
             responseResult = [(id<EJHttpResponseDelegate>)bizObj ej_resultFlag];
             responseErrorMsg = [(id<EJHttpResponseDelegate>)bizObj ej_errorMessage];
             //弹出错误提示
