@@ -31,10 +31,10 @@ static UIViewController *mCurrentController = nil;
 - (void)viewDidAppear:(BOOL)animated{
     [super viewDidAppear:animated];
     LoginRequestModel *model = [LoginRequestModel new];
-    model.username = @"admin";
-    model.password = @"123456";
+//    model.username = @"admin";
+//    model.password = @"123456";
     
-    [[EJHttpClient shared] ej_requestPostParamObject:model responseHandler:^(id respObject, BOOL success) {
+    [[EJHttpClient shared] ej_requestParamObject:model method:GET responseHandler:^(id respObject, BOOL success) {
         if(success){
             LoginResponseModel *respModel = (LoginResponseModel *)respObject;
             NSLog(@"username:%@",respModel.username);
@@ -45,14 +45,14 @@ static UIViewController *mCurrentController = nil;
     }];
     
     //第二种方式
-    //    [[EJHttpClient shared] ej_requestWithURLString:@"http://www.test.com/user/register.json" method:POST param:@{@"username":@"admin",@"password":@"123456"} responseHandler:^(NSDictionary *param, NSError *error, BOOL isInterceptor) {
-    //        if(isInterceptor){
-    //            //处理拦截事件
-    //        }
-    //        if(!error){
-    //            NSLog(@"param:%@",param);
-    //        }
-    //    }];
+//        [[EJHttpClient shared] ej_requestWithURLString:@"https://raw.githubusercontent.com/iOnRoad/EJHttpClient/master/response.json" method:GET param:@{@"username":@"admin",@"password":@"123456"} responseHandler:^(NSDictionary *param, NSError *error, BOOL isInterceptor) {
+//            if(isInterceptor){
+//                //处理拦截事件
+//            }
+//            if(!error){
+//                NSLog(@"param:%@",param);
+//            }
+//        }];
 }
 
 - (void)didReceiveMemoryWarning {

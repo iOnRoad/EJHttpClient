@@ -46,7 +46,7 @@
 
 - (void)registerHttpClientSetting{
     //注册http请求基本信息
-    [[EJHttpClient shared] ej_registerBaseURL:@"http://www.baseURL.com"];
+    [[EJHttpClient shared] ej_registerBaseURL:@"https://raw.githubusercontent.com"];
     [[EJHttpClient shared] ej_registerInterceptorClassName:@"ResponseInterceptorModel"];
     [[EJHttpClient shared] ej_registerCommonRequestClassName:@"CommonRequestModel"  bizRequestKey:@"data"];
     [[EJHttpClient shared] ej_registerCommonResponseClassName:@"CommonResponseModel" bizResponseKey:@"data"];

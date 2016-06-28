@@ -23,7 +23,7 @@ MJCodingImplementation
 }
 
 - (NSString *)ej_requestURLString{
-    return @"/user/register.json";
+    return @"iOnRoad/EJHttpClient/master/response.json";
 }
 
 - (NSString *)ej_responseClassName{
@@ -43,7 +43,7 @@ MJCodingImplementation
 }
 
 - (BOOL)ej_endLoadingWhenFinished{
-    return NO;
+    return YES;
 }
 
 - (BOOL)ej_showErrorMessage{
