@@ -1,0 +1,9 @@
+{
+	"device_id": "xxxx",
+	"version" : "1.0.0",
+	"channel": "iOS",
+	"data": {
+		"username" : "admin",
+		"password" : "123456"
+	}
+}

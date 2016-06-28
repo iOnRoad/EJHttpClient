@@ -17,9 +17,19 @@
 
 @implementation ViewController
 
+static UIViewController *mCurrentController = nil;
++ (UIViewController *)currentController{
+    return mCurrentController;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    mCurrentController = self;
+}
+
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     LoginRequestModel *model = [LoginRequestModel new];
     model.username = @"admin";
     model.password = @"123456";
@@ -29,18 +39,20 @@
             LoginResponseModel *respModel = (LoginResponseModel *)respObject;
             NSLog(@"username:%@",respModel.username);
             NSLog(@"userToken:%@",respModel.userToken);
+        }else{
+            NSLog(@"error!");
         }
     }];
     
     //第二种方式
-    [[EJHttpClient shared] ej_requestWithURLString:@"http://www.test.com/user/register.json" method:POST param:@{@"username":@"admin",@"password":@"123456"} responseHandler:^(NSDictionary *param, NSError *error, BOOL isInterceptor) {
-        if(isInterceptor){
-            //处理拦截事件
-        }
-        if(!error){
-            NSLog(@"param:%@",param);
-        }
-    }];
+    //    [[EJHttpClient shared] ej_requestWithURLString:@"http://www.test.com/user/register.json" method:POST param:@{@"username":@"admin",@"password":@"123456"} responseHandler:^(NSDictionary *param, NSError *error, BOOL isInterceptor) {
+    //        if(isInterceptor){
+    //            //处理拦截事件
+    //        }
+    //        if(!error){
+    //            NSLog(@"param:%@",param);
+    //        }
+    //    }];
 }
 
 - (void)didReceiveMemoryWarning {

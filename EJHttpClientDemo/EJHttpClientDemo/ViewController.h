@@ -10,6 +10,7 @@
 
 @interface ViewController : UIViewController
 
++ (UIViewController *)currentController;
 
 @end
 

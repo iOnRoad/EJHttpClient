@@ -18,6 +18,8 @@
 		55C4BC591D221DD300A56D94 /* LoginRequestModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C4BC581D221DD300A56D94 /* LoginRequestModel.m */; };
 		55C4BC5C1D221DDF00A56D94 /* LoginResponseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C4BC5B1D221DDF00A56D94 /* LoginResponseModel.m */; };
 		55C4BC5F1D221FD900A56D94 /* ResponseInterceptorModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C4BC5E1D221FD900A56D94 /* ResponseInterceptorModel.m */; };
+		55C4BC641D222F1500A56D94 /* EJDefaultErrorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C4BC611D222F1500A56D94 /* EJDefaultErrorView.m */; };
+		55C4BC651D222F1500A56D94 /* EJDefaultLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 55C4BC631D222F1500A56D94 /* EJDefaultLoadingView.m */; };
 		AD8FC0DC357452EA29D90728 /* libPods-EJHttpClientDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC64DACDB649E667FCE96C67 /* libPods-EJHttpClientDemo.a */; };
 /* End PBXBuildFile section */
 
@@ -44,6 +46,10 @@
 		55C4BC5B1D221DDF00A56D94 /* LoginResponseModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginResponseModel.m; sourceTree = "<group>"; };
 		55C4BC5D1D221FD900A56D94 /* ResponseInterceptorModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResponseInterceptorModel.h; sourceTree = "<group>"; };
 		55C4BC5E1D221FD900A56D94 /* ResponseInterceptorModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResponseInterceptorModel.m; sourceTree = "<group>"; };
+		55C4BC601D222F1500A56D94 /* EJDefaultErrorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EJDefaultErrorView.h; sourceTree = "<group>"; };
+		55C4BC611D222F1500A56D94 /* EJDefaultErrorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EJDefaultErrorView.m; sourceTree = "<group>"; };
+		55C4BC621D222F1500A56D94 /* EJDefaultLoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EJDefaultLoadingView.h; sourceTree = "<group>"; };
+		55C4BC631D222F1500A56D94 /* EJDefaultLoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EJDefaultLoadingView.m; sourceTree = "<group>"; };
 		DC64DACDB649E667FCE96C67 /* libPods-EJHttpClientDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-EJHttpClientDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -93,6 +99,10 @@
 				55C4BC3D1D22156A00A56D94 /* AppDelegate.m */,
 				55C4BC3F1D22156A00A56D94 /* ViewController.h */,
 				55C4BC401D22156A00A56D94 /* ViewController.m */,
+				55C4BC601D222F1500A56D94 /* EJDefaultErrorView.h */,
+				55C4BC611D222F1500A56D94 /* EJDefaultErrorView.m */,
+				55C4BC621D222F1500A56D94 /* EJDefaultLoadingView.h */,
+				55C4BC631D222F1500A56D94 /* EJDefaultLoadingView.m */,
 				55C4BC501D221D9500A56D94 /* Req&Resp */,
 				55C4BC421D22156A00A56D94 /* Main.storyboard */,
 				55C4BC451D22156A00A56D94 /* Assets.xcassets */,
@@ -257,6 +267,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				55C4BC651D222F1500A56D94 /* EJDefaultLoadingView.m in Sources */,
+				55C4BC641D222F1500A56D94 /* EJDefaultErrorView.m in Sources */,
 				55C4BC411D22156A00A56D94 /* ViewController.m in Sources */,
 				55C4BC561D221DBE00A56D94 /* CommonResponseModel.m in Sources */,
 				55C4BC3E1D22156A00A56D94 /* AppDelegate.m in Sources */,

@@ -39,11 +39,11 @@ MJCodingImplementation
 }
 
 - (UIView *)ej_loadingContainerView{
-    return [ViewController new].view;
+    return [ViewController currentController].view;
 }
 
 - (BOOL)ej_endLoadingWhenFinished{
-    return YES;
+    return NO;
 }
 
 - (BOOL)ej_showErrorMessage{

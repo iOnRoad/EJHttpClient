@@ -50,7 +50,7 @@
     [[EJHttpClient shared] ej_registerInterceptorClassName:@"ResponseInterceptorModel"];
     [[EJHttpClient shared] ej_registerCommonRequestClassName:@"CommonRequestModel"  bizRequestKey:@"data"];
     [[EJHttpClient shared] ej_registerCommonResponseClassName:@"CommonResponseModel" bizResponseKey:@"data"];
-//    [[EJHttpClient shared] ej_registerLoadingViewClassName:@"EJDefaultLoadingView" errorViewClassName:@"EJDefaultErrorView"];
+    [[EJHttpClient shared] ej_registerLoadingViewClassName:@"EJDefaultLoadingView" errorViewClassName:@"EJDefaultErrorView"];
 //    [[EJHttpClient shared] ej_enableGzipRequestSerializer];
 }
 

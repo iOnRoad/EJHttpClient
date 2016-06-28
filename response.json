@@ -1,0 +1,9 @@
+{
+	"flag": true,
+	"errorCode" : 16,
+	"errorMsg": "error info",
+	"data": {
+		"username" : "admin",
+		"userToken" : "123456"
+	}
+}
