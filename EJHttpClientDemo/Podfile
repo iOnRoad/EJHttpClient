@@ -5,6 +5,6 @@ inhibit_all_warnings!
 
 target 'EJHttpClientDemo' do
 
-pod 'EJHttpClient’, :git => 'https://github.com/iOnRoad/EJHttpClient.git'
+pod 'EJHttpClient', '~> 1.0.0'
 
 end

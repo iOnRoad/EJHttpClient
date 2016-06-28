@@ -35,16 +35,7 @@ PODS:
   - Reachability (3.2)
 
 DEPENDENCIES:
-  - EJHttpClient (from `https://github.com/iOnRoad/EJHttpClient.git`)
-
-EXTERNAL SOURCES:
-  EJHttpClient:
-    :git: https://github.com/iOnRoad/EJHttpClient.git
-
-CHECKOUT OPTIONS:
-  EJHttpClient:
-    :commit: ca3d8f4175135ee773458888d7ec825fcff8308b
-    :git: https://github.com/iOnRoad/EJHttpClient.git
+  - EJHttpClient (~> 1.0.0)
 
 SPEC CHECKSUMS:
   AFgzipRequestSerializer: 329638fc8ed023a15188dc03dd2f1a930da30ea4
@@ -54,6 +45,6 @@ SPEC CHECKSUMS:
   MJExtension: d86aacb740c87519d20e3cca55b6fa4be6cc7548
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
 
-PODFILE CHECKSUM: 29b71c1dcde4a061d96384b22412c00b797c8066
+PODFILE CHECKSUM: a2b33cb3ff83d6889f8f102979a61befc90242ff
 
 COCOAPODS: 1.0.1
