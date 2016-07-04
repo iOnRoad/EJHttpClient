@@ -23,15 +23,15 @@ PODS:
   - AFNetworking/UIKit (2.6.3):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - EJHttpClient (1.0.0):
-    - EJHttpClient/EJHttpClient (= 1.0.0)
-  - EJHttpClient/EJHttpClient (1.0.0):
+  - EJHttpClient (1.0.1):
+    - EJHttpClient/EJHttpClient (= 1.0.1)
+  - EJHttpClient/EJHttpClient (1.0.1):
     - AFgzipRequestSerializer (~> 0.0.2)
     - AFNetworking (~> 2.6.3)
     - MJExtension (~> 3.0.10)
     - Reachability (~> 3.2)
   - Godzippa (1.1.0)
-  - MJExtension (3.0.10)
+  - MJExtension (3.0.11)
   - Reachability (3.2)
 
 DEPENDENCIES:
@@ -40,9 +40,9 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   AFgzipRequestSerializer: 329638fc8ed023a15188dc03dd2f1a930da30ea4
   AFNetworking: cb8d14a848e831097108418f5d49217339d4eb60
-  EJHttpClient: 8398cf4adaa006d1e2ea89c146a239aaae0e4817
+  EJHttpClient: aaf39b331098f5150664811a363707b12b32958f
   Godzippa: 21621e8ddc2f1521db473a72b48148c3f0e79d76
-  MJExtension: d86aacb740c87519d20e3cca55b6fa4be6cc7548
+  MJExtension: f9ae6ddc0f1c482c3c9af750280ccebd14381958
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
 
 PODFILE CHECKSUM: a2b33cb3ff83d6889f8f102979a61befc90242ff

@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
         s.name             = "EJHttpClient"
-        s.version          = "1.0.0"
+        s.version          = "1.0.1"
         s.summary          = "This is a convenient network framework."
         s.description      = <<-DESCRIPTION
                           Using the object as the parameter of the network request, the block asynchronous callback automatically assigned to the response object, encapsulating the errorView and the loadView. In a word, you can request the network, the pop up loadingView and the errorView prompt.
