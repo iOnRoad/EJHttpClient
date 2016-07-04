@@ -26,13 +26,13 @@
 
 @property(strong,nonatomic) NSMutableDictionary *ej_loadingDict;
 @property(strong,nonatomic) NSMutableDictionary *ej_requestOperationDict;
-@property(strong,nonatomic) AFHTTPRequestOperationManager *ej_httpManager;
-@property(strong,nonatomic) AFHTTPRequestOperationManager *ej_opManager;
+@property(strong,nonatomic) AFHTTPSessionManager *ej_httpManager;
+@property(strong,nonatomic) AFHTTPSessionManager *ej_opManager;
 
 //handle object request
-- (void)ej_handleSuccessResultWithRequest:(id<EJHttpRequestDelegate>)request responseObject:(id)responseObject  responseHandler:(EJHttpHandler)handler commonResponseHandler:(EJHttpCommonHandler)cmnHandler;
-- (void)ej_handleFailedResultWithRequest:(id<EJHttpRequestDelegate>)request error:(NSError *)error  responseHandler:(EJHttpHandler)handler commonResponseHandler:(EJHttpCommonHandler)cmnHandler;
-- (void)ej_handlerResponseParam:(NSDictionary *)param withError:(NSError *)error responseHandler:(EJHttpParamHandler)handler;
+- (void)ej_handleSuccessResultWithRequest:(id<EJHttpRequestDelegate>)request responseObject:(id)responseObject  task:(NSURLSessionDataTask *)task responseHandler:(EJHttpHandler)handler commonResponseHandler:(EJHttpCommonHandler)cmnHandler;
+- (void)ej_handleFailedResultWithRequest:(id<EJHttpRequestDelegate>)request   task:(NSURLSessionDataTask *)task error:(NSError *)error  responseHandler:(EJHttpHandler)handler commonResponseHandler:(EJHttpCommonHandler)cmnHandler;
+- (void)ej_handlerResponseParam:(NSDictionary *)param  task:(NSURLSessionDataTask *)task withError:(NSError *)error responseHandler:(EJHttpParamHandler)handler;
 
 @end
 
@@ -69,7 +69,7 @@ static EJHttpClient *ej_sharedHttpClient = nil;
         self.ej_loadingDict = [NSMutableDictionary dictionaryWithCapacity:0];
         self.ej_requestOperationDict = [NSMutableDictionary dictionaryWithCapacity:0];
         
-        _ej_httpManager = [AFHTTPRequestOperationManager manager];
+        _ej_httpManager = [AFHTTPSessionManager manager];
         _ej_opManager = nil;
     }
     return self;
@@ -77,7 +77,7 @@ static EJHttpClient *ej_sharedHttpClient = nil;
 
 - (void)ej_registerBaseURL:(NSString *)urlString{
     self.ej_baseURL = urlString;
-    _ej_opManager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:self.ej_baseURL]];
+    _ej_opManager = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:self.ej_baseURL]];
 }
 
 
@@ -135,15 +135,20 @@ static EJHttpClient *ej_sharedHttpClient = nil;
     NSLog(@"###Start Request Param:%@",bodyParam.description);
     
     //发起请求,先判断请求是否存在队列中,如果在，在取消已有请求
-    AFHTTPRequestOperationManager *manager = [self ej_requestManagerWithURLString:urlString];
+    AFHTTPSessionManager *manager = [self ej_requestManagerWithURLString:urlString];
     if([request ej_ignoreDuplicateRequest]){
-        for(AFURLConnectionOperation *op in manager.operationQueue.operations){
-            if([op.request.URL.absoluteString rangeOfString:urlString].length>0){
-                NSURLRequest *urlRequest =  [manager.requestSerializer requestBySerializingRequest:op.request withParameters:bodyParam error:nil];
-                //如果URL一直，并且请求体一直，则取消请求
-                if([urlRequest.HTTPBody isEqualToData:op.request.HTTPBody]){
-                    NSLog(@"Cancel Request URL:%@",op.request.URL.absoluteString);
-                    [op cancel];
+        for(NSURLSessionDataTask *task in manager.tasks){
+            if([task.currentRequest.URL.absoluteString rangeOfString:urlString].length>0){
+                if([@"GET" isEqualToString:task.currentRequest.HTTPMethod]){
+                    NSLog(@"Cancel Request URL:%@",task.currentRequest.URL.absoluteString);
+                    [task cancel];
+                }else{
+                    NSURLRequest *urlRequest =  [manager.requestSerializer requestBySerializingRequest:task.currentRequest withParameters:bodyParam error:nil];
+                    //如果URL一直，并且请求体一直，则取消请求
+                    if([urlRequest.HTTPBody isEqualToData:task.originalRequest.HTTPBody]){
+                        NSLog(@"Cancel Request URL:%@",task.currentRequest.URL.absoluteString);
+                        [task cancel];
+                    }
                 }
             }
         }
@@ -156,19 +161,19 @@ static EJHttpClient *ej_sharedHttpClient = nil;
     switch (method) {
         case GET:
         {
-            [manager GET:urlString parameters:bodyParam success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                [weakSelf ej_handleSuccessResultWithRequest:request responseObject:responseObject responseHandler:handler commonResponseHandler:commonHandler];
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                [weakSelf ej_handleFailedResultWithRequest:request error:error responseHandler:handler commonResponseHandler:commonHandler];
+            [manager GET:urlString parameters:bodyParam success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+                [weakSelf ej_handleSuccessResultWithRequest:request responseObject:responseObject task:task responseHandler:handler commonResponseHandler:commonHandler];
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                [weakSelf ej_handleFailedResultWithRequest:request  task:task error:error responseHandler:handler commonResponseHandler:commonHandler];
             }];
         }
             break;
         case POST:
         {
-            [manager POST:urlString parameters:bodyParam success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                [weakSelf ej_handleSuccessResultWithRequest:request responseObject:responseObject responseHandler:handler commonResponseHandler:commonHandler];
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                [weakSelf ej_handleFailedResultWithRequest:request error:error responseHandler:handler commonResponseHandler:commonHandler];
+            [manager POST:urlString parameters:bodyParam success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+                [weakSelf ej_handleSuccessResultWithRequest:request responseObject:responseObject task:task responseHandler:handler commonResponseHandler:commonHandler];
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                [weakSelf ej_handleFailedResultWithRequest:request  task:task error:error responseHandler:handler commonResponseHandler:commonHandler];
             }];
         }
     }
@@ -189,31 +194,23 @@ static EJHttpClient *ej_sharedHttpClient = nil;
     NSLog(@"###Start Request Param:%@",bodyParam.description);
     //发起请求
     __weak typeof(self) weakSelf = self;
-    AFHTTPRequestOperationManager *manager = [self ej_requestManagerWithURLString:urlString];
+    AFHTTPSessionManager *manager = [self ej_requestManagerWithURLString:urlString];
     switch (method) {
         case GET:
         {
-            [manager GET:urlString parameters:bodyParam success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                if(handler){
-                    [weakSelf ej_handlerResponseParam:responseObject withError:nil responseHandler:handler];
-                }
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                if(handler){
-                    [weakSelf ej_handlerResponseParam:nil withError:error responseHandler:handler];
-                }
+            [manager GET:urlString parameters:bodyParam success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+                [weakSelf ej_handlerResponseParam:responseObject task:task withError:nil responseHandler:handler];
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                [weakSelf ej_handlerResponseParam:nil task:task withError:error responseHandler:handler];
             }];
         }
             break;
         case POST:
         {
-            [manager POST:urlString parameters:bodyParam success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                if(handler){
-                    [weakSelf ej_handlerResponseParam:responseObject withError:nil responseHandler:handler];
-                }
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                if(handler){
-                    [weakSelf ej_handlerResponseParam:nil withError:error responseHandler:handler];
-                }
+            [manager POST:urlString parameters:bodyParam success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+                [weakSelf ej_handlerResponseParam:responseObject task:task withError:nil responseHandler:handler];
+            } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+                [weakSelf ej_handlerResponseParam:nil task:task withError:error responseHandler:handler];
             }];
         }
     }
@@ -235,30 +232,26 @@ static EJHttpClient *ej_sharedHttpClient = nil;
 
     //发起请求
     __weak typeof(self) weakSelf = self;
-    AFHTTPRequestOperationManager *manager = [self ej_requestUploadFileManagerWithURLString:urlString];
-    AFHTTPRequestOperation *uploadOperation = [manager POST:urlString parameters:bodyParam constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
-        if(fileData){
-            [formData appendPartWithFileData:fileData name:name fileName:fileName mimeType:miniType];
-        }
-    } success:^(AFHTTPRequestOperation * _Nonnull operation, id  _Nonnull responseObject) {
+    AFHTTPSessionManager *manager = [self ej_requestUploadFileManagerWithURLString:urlString];
+    NSURLSessionDataTask *uploadTask = [manager POST:urlString parameters:bodyParam constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+        [formData appendPartWithFileData:fileData name:name fileName:fileName mimeType:miniType];
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
         if(handler){
-            [weakSelf ej_handlerResponseParam:responseObject withError:nil responseHandler:handler];
+            [weakSelf ej_handlerResponseParam:responseObject task:task withError:nil responseHandler:handler];
         }
-    } failure:^(AFHTTPRequestOperation * _Nullable operation, NSError * _Nonnull error) {
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if(handler){
-            [weakSelf ej_handlerResponseParam:nil withError:error responseHandler:handler];
+            [weakSelf ej_handlerResponseParam:nil task:task withError:error responseHandler:handler];
         }
     }];
     
-    [uploadOperation setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
-        if(progressHandler){
-            progressHandler(bytesWritten,totalBytesWritten,totalBytesExpectedToWrite);
-        }
-    }];
+    if(progressHandler){
+        progressHandler(uploadTask.countOfBytesSent,uploadTask.countOfBytesExpectedToSend);
+    }
 }
 
 #pragma mark - object response methods
-- (void)ej_handleSuccessResultWithRequest:(id<EJHttpRequestDelegate>)request responseObject:(id)responseObject  responseHandler:(EJHttpHandler)handler commonResponseHandler:(EJHttpCommonHandler)cmnHandler{
+- (void)ej_handleSuccessResultWithRequest:(id<EJHttpRequestDelegate>)request responseObject:(id)responseObject   task:task responseHandler:(EJHttpHandler)handler commonResponseHandler:(EJHttpCommonHandler)cmnHandler{
     NSLog(@"request URL:%@\nResponse :%@",[request ej_requestURLString],responseObject);
     //转换成公共响应数据
     Class cmnObjectClass = NSClassFromString(self.ej_commonResponseClassName);
@@ -297,7 +290,7 @@ static EJHttpClient *ej_sharedHttpClient = nil;
         if(interceptorClass){
             //如果存在协议名，则拦截
             id<EJHttpResponseInterceptor> httpInterceptorDelegate = [interceptorClass new];
-            BOOL result = [httpInterceptorDelegate ej_interceptorResponseObjectWithBizObject:bizObj commonObject:cmnObj];
+            BOOL result = [httpInterceptorDelegate ej_interceptorResponseObjectWithBizObject:bizObj commonObject:cmnObj ofTask:task];
             if(result){
                 //处理UI
                 [self ej_dismissLoadingWithRequest:request];
@@ -314,7 +307,8 @@ static EJHttpClient *ej_sharedHttpClient = nil;
             if(!responseResult){
                 [self ej_showErrorMessage:responseErrorMsg withRequest:request response:(id<EJHttpResponseDelegate>)cmnObj];
             }
-        } else if(bizObj && [bizObj conformsToProtocol:@protocol(EJHttpResponseDelegate)]){
+        }
+        if(bizObj && [bizObj conformsToProtocol:@protocol(EJHttpResponseDelegate)]){
             responseResult = [(id<EJHttpResponseDelegate>)bizObj ej_resultFlag];
             responseErrorMsg = [(id<EJHttpResponseDelegate>)bizObj ej_errorMessage];
             //弹出错误提示
@@ -333,9 +327,20 @@ static EJHttpClient *ej_sharedHttpClient = nil;
     });
 }
 
-- (void)ej_handleFailedResultWithRequest:(id<EJHttpRequestDelegate>)request error:(NSError *)error responseHandler:(EJHttpHandler)handler commonResponseHandler:(EJHttpCommonHandler)cmnHandler{
+- (void)ej_handleFailedResultWithRequest:(id<EJHttpRequestDelegate>)request task:(NSURLSessionDataTask *)task  error:(NSError *)error responseHandler:(EJHttpHandler)handler commonResponseHandler:(EJHttpCommonHandler)cmnHandler{
     //error.localizedFailureReason
     dispatch_async(dispatch_get_main_queue(), ^{
+        //拦截器
+        Class interceptorClass = NSClassFromString(self.ej_interceptorClassName);
+        //需要判断类是否存在
+        if(interceptorClass){
+            //如果存在协议名，则拦截
+            id<EJHttpResponseInterceptor> httpInterceptorDelegate = [interceptorClass new];
+            if([httpInterceptorDelegate respondsToSelector:@selector(ej_interceptorResponseErrorInfo:ofTask:)]){
+                [httpInterceptorDelegate ej_interceptorResponseErrorInfo:error ofTask:task];
+            }
+        }
+        
         //错误提示
          if(error.code != NSURLErrorCancelled){
              BOOL status = [self ej_checkNetworkStatus];
@@ -357,7 +362,7 @@ static EJHttpClient *ej_sharedHttpClient = nil;
 }
 
 #pragma mark - param response 
-- (void)ej_handlerResponseParam:(NSDictionary *)param withError:(NSError *)error responseHandler:(EJHttpParamHandler)handler{
+- (void)ej_handlerResponseParam:(NSDictionary *)param task:(NSURLSessionDataTask *)task  withError:(NSError *)error responseHandler:(EJHttpParamHandler)handler{
     dispatch_async(dispatch_get_main_queue(), ^{
         BOOL isInterceptor = NO;
         if(param){
@@ -367,9 +372,13 @@ static EJHttpClient *ej_sharedHttpClient = nil;
             if(interceptorClass){
                 //如果存在协议名，则拦截
                 id<EJHttpResponseInterceptor> httpInterceptorDelegate = [interceptorClass new];
-                BOOL result = [httpInterceptorDelegate ej_interceptorResponseParam:param];
+                BOOL result = [httpInterceptorDelegate ej_interceptorResponseParam:param ofTask:task];
                 if(result){
                     isInterceptor = YES;
+                }
+                //拦截错误信息
+                if([httpInterceptorDelegate respondsToSelector:@selector(ej_interceptorResponseErrorInfo:ofTask:)]){
+                    [httpInterceptorDelegate ej_interceptorResponseErrorInfo:error ofTask:task];
                 }
             }
         }
@@ -381,9 +390,9 @@ static EJHttpClient *ej_sharedHttpClient = nil;
 
 #pragma mark - private methods
 //根据是否含有基本URL判断来生成请求队列对象
-- (AFHTTPRequestOperationManager *)ej_requestManagerWithURLString:(NSString *)urlString{
+- (AFHTTPSessionManager *)ej_requestManagerWithURLString:(NSString *)urlString{
     //根据URLString是否基于BaseURL来分配manager
-    AFHTTPRequestOperationManager *manager;
+    AFHTTPSessionManager *manager;
     if([urlString hasPrefix:@"http://"] || [urlString hasPrefix:@"https://"]){
         manager = self.ej_httpManager;
     }
@@ -405,14 +414,14 @@ static EJHttpClient *ej_sharedHttpClient = nil;
     return manager;
 }
 
-- (AFHTTPRequestOperationManager *)ej_requestUploadFileManagerWithURLString:(NSString *)urlString{
+- (AFHTTPSessionManager *)ej_requestUploadFileManagerWithURLString:(NSString *)urlString{
     //根据URLString是否基于BaseURL来分配manager
-    AFHTTPRequestOperationManager *manager = nil;
+    AFHTTPSessionManager *manager = nil;
     if([urlString hasPrefix:@"http://"] || [urlString hasPrefix:@"https://"]){
-        manager = [AFHTTPRequestOperationManager manager];
+        manager = [AFHTTPSessionManager manager];
     }
     else{
-        manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:self.ej_baseURL]];
+        manager = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:self.ej_baseURL]];
     }
     //Content-Type必须是“multipart/form-data”，不能设置AFJSONRequestSerier.
     [manager.requestSerializer setValue:@"multipart/form-data" forHTTPHeaderField:@"Content-Type"];

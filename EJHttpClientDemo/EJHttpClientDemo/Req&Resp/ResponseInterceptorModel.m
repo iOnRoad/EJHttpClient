@@ -12,10 +12,12 @@
 
 @implementation ResponseInterceptorModel
 
-- (BOOL)ej_interceptorResponseObjectWithBizObject:(id)bizObject commonObject:(id)cmnObject{
+- (BOOL)ej_interceptorResponseObjectWithBizObject:(id)bizObject commonObject:(id)cmnObject ofTask:(NSURLSessionDataTask *)task{
     CommonResponseModel *cmnModel = (CommonResponseModel *)cmnObject;
     NSLog(@"cmnModel errorCode: %ld",cmnModel.errorCode);
     NSLog(@"cmnModel errorMsg: %@",cmnModel.errorMsg);
+    
+    NSLog(@"task data count:%@",task.originalRequest.HTTPMethod);
 
     if([bizObject isKindOfClass:[LoginResponseModel class]]){
         LoginResponseModel *model = (LoginResponseModel *)bizObject;
@@ -29,7 +31,7 @@
     return NO;
 }
 
-- (BOOL)ej_interceptorResponseParam:(NSDictionary *)param{
+- (BOOL)ej_interceptorResponseParam:(NSDictionary *)param ofTask:(NSURLSessionDataTask *)task{
     NSInteger errorCode = [param[@"errorCode"] integerValue];
     NSString *errorMsg = param[@"errorMsg"];
     NSLog(@"errorCode: %ld",errorCode);

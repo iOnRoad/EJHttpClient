@@ -44,6 +44,16 @@ static UIViewController *mCurrentController = nil;
         }
     }];
     
+    [[EJHttpClient shared] ej_requestParamObject:model method:GET responseHandler:^(id respObject, BOOL success) {
+        if(success){
+            LoginResponseModel *respModel = (LoginResponseModel *)respObject;
+            NSLog(@"username:%@",respModel.username);
+            NSLog(@"userToken:%@",respModel.userToken);
+        }else{
+            NSLog(@"error!");
+        }
+    }];
+        
     //第二种方式
 //        [[EJHttpClient shared] ej_requestWithURLString:@"https://raw.githubusercontent.com/iOnRoad/EJHttpClient/master/response.json" method:GET param:@{@"username":@"admin",@"password":@"123456"} responseHandler:^(NSDictionary *param, NSError *error, BOOL isInterceptor) {
 //            if(isInterceptor){
