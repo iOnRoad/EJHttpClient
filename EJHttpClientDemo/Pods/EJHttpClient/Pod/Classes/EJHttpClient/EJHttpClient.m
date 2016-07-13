@@ -519,7 +519,7 @@ static EJHttpClient *ej_sharedHttpClient = nil;
 
 #pragma mark - Error methods
 - (void)ej_showErrorMessage:(NSString *)errorMsg withRequest:(id<EJHttpRequestDelegate>)request response:(id<EJHttpResponseDelegate>)response{
-    if(!request || [request ej_showErrorMessage]){
+    if([request ej_showErrorMessage]){
         Class errorViewClass = NSClassFromString(self.ej_errorViewClassName);
         if(errorViewClass){
             EJErrorView *errorView = [errorViewClass new];
