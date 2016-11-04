@@ -20,8 +20,14 @@ typedef void (^EJHttpHandler)(id respObject,BOOL success);
 typedef void (^EJHttpCommonHandler)(id respObject,id cmnRespObject,BOOL success);
 //以字典方式展现回调，用于动态返回字段的情形
 typedef void (^EJHttpParamHandler)(NSDictionary *param,NSError *error,BOOL isInterceptor);
+
 //上传图片回调bytes本次传输多少，totalBytes总共传输了多少，totalBytesExpected需要上传的文件大小是多少
-typedef void (^EJHttpProgressHandler)(NSUInteger sentBytes, long long totalBytesExpected);
+typedef void (^EJHttpUploadProgressHandler)(NSUInteger sentBytes, long long totalBytesExpected);
+
+//下载文件回到，receivedBytes已下载了多少，totalBytesExpectedToReceive总共要下载多少。
+typedef void (^EJHttpDownloadProgressHandler)(NSUInteger receivedBytes, long long totalBytesExpectedToReceive);
+//下载文件完成回调
+typedef void (^EJHttpDownloadCompletedHandler)(NSURLResponse *response,NSURL *downloadFilePath,NSError *error);
 
 //请求方式
 typedef NS_ENUM(NSInteger, EJHttpRequestMethod) {
@@ -73,7 +79,7 @@ typedef NS_ENUM(NSInteger, EJHttpRequestMethod) {
  *  @param handler       包含“响应数据实体”、“是否正常获取数据”，如果使用该block，把commonHandler参数置为nil
  *  @param commonHandler 包含“响应数据实体”、“是否正常获取数据”、“基本通用数据”，如果使用该block，则把responseHandler参数置为nil
  */
-- (void)ej_requestWithURLString:(NSString *)urlString method:(EJHttpRequestMethod)method param:(NSDictionary *)param responseHandler:(EJHttpParamHandler)handler;
+- (void)ej_requestWithURLString:(NSString *)urlString method:(EJHttpRequestMethod)method cookie:(NSString *)cookie param:(NSDictionary *)param responseHandler:(EJHttpParamHandler)handler;
 
 /**
  *  上传图片二进制，并获取图片资源
@@ -88,6 +94,20 @@ typedef NS_ENUM(NSInteger, EJHttpRequestMethod) {
  *  @param progressHandler 上传进度
  */
 //**** 加载符和错误显示，以及拦截器 需单独实现 *******
-- (void)ej_requestUploadFileWithURLString:(NSString *)urlString param:(NSDictionary *)param name:(NSString *)name fileData:(NSData *)fileData fileName:(NSString *)fileName mimeType:(NSString *)miniType responseHandler:(EJHttpParamHandler)handler progress:(EJHttpProgressHandler)progressHandler;
+- (void)ej_requestUploadFileWithURLString:(NSString *)urlString param:(NSDictionary *)param name:(NSString *)name fileData:(NSData *)fileData fileName:(NSString *)fileName mimeType:(NSString *)miniType responseHandler:(EJHttpParamHandler)handler progress:(EJHttpUploadProgressHandler)progressHandler;
+
+//多张附件上传
+- (void)ej_requestUploadMultipleFilesWithURLString:(NSString *)urlString param:(NSDictionary *)param names:(NSArray *)names fileDatas:(NSArray *)fileDatas fileNames:(NSArray *)fileNames mimeType:(NSArray *)miniTypes responseHandler:(EJHttpParamHandler)handler progress:(EJHttpUploadProgressHandler)progressHandler;
+
+/**
+ *  下载文件
+ *
+ *  @param URLString       URL
+ *  @param saveFilePath      指定文件存放位置，可为nil，如果不指定，默认存在document目录下。
+ *  @param progress       下载进度信息
+ *  @param completedHandler       完成回调
+ */
+//**** 加载符和错误显示，以及拦截器 需单独实现 *******
+- (NSURLSessionDownloadTask *)ej_requestDownloadFileWithURLString:(NSString *)urlString saveFilePath:(NSString *)saveFilePath progress:(EJHttpDownloadProgressHandler)progressHandler completedHandler:(EJHttpDownloadCompletedHandler)completedHandler;
 
 @end

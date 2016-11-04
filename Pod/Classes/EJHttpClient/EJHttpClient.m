@@ -138,20 +138,29 @@ static EJHttpClient *ej_sharedHttpClient = nil;
     AFHTTPSessionManager *manager = [self ej_requestManagerWithURLString:urlString];
     if([request ej_ignoreDuplicateRequest]){
         for(NSURLSessionDataTask *task in manager.tasks){
-            if([task.currentRequest.URL.absoluteString rangeOfString:urlString].length>0){
-                if([@"GET" isEqualToString:task.currentRequest.HTTPMethod]){
-                    NSLog(@"Cancel Request URL:%@",task.currentRequest.URL.absoluteString);
-                    [task cancel];
-                }else{
-                    NSURLRequest *urlRequest =  [manager.requestSerializer requestBySerializingRequest:task.currentRequest withParameters:bodyParam error:nil];
-                    //如果URL一直，并且请求体一直，则取消请求
-                    if([urlRequest.HTTPBody isEqualToData:task.originalRequest.HTTPBody]){
+            if(task.state == NSURLSessionTaskStateRunning){
+                if([task.currentRequest.URL.absoluteString rangeOfString:urlString].length>0){
+                    if([@"GET" isEqualToString:task.currentRequest.HTTPMethod]){
                         NSLog(@"Cancel Request URL:%@",task.currentRequest.URL.absoluteString);
                         [task cancel];
+                        [self ej_dismissLoadingWithCancelRequest:request];
+                    }else{
+                        NSURLRequest *urlRequest =  [manager.requestSerializer requestBySerializingRequest:task.currentRequest withParameters:bodyParam error:nil];
+                        //如果URL一直，并且请求体一直，则取消请求
+                        if([urlRequest.HTTPBody isEqualToData:task.originalRequest.HTTPBody]){
+                            NSLog(@"Cancel Request URL:%@",task.currentRequest.URL.absoluteString);
+                            [task cancel];
+                            [self ej_dismissLoadingWithCancelRequest:request];
+                        }
                     }
                 }
             }
         }
+    }
+    
+    //写入cookie
+    if([request ej_cookie] != nil){
+        [manager.requestSerializer setValue:[request ej_cookie] forHTTPHeaderField:@"Cookie"];
     }
     
     //开启加载符
@@ -180,7 +189,7 @@ static EJHttpClient *ej_sharedHttpClient = nil;
 }
 
 #pragma mark - param request methods
-- (void)ej_requestWithURLString:(NSString *)urlString method:(EJHttpRequestMethod)method param:(NSDictionary *)param responseHandler:(EJHttpParamHandler)handler{
+- (void)ej_requestWithURLString:(NSString *)urlString method:(EJHttpRequestMethod)method cookie:(NSString *)cookie param:(NSDictionary *)param responseHandler:(EJHttpParamHandler)handler{
     if(urlString.length==0){
         NSLog(@"###WARNING：URL IS NULL !!!");
         if(handler){
@@ -195,6 +204,9 @@ static EJHttpClient *ej_sharedHttpClient = nil;
     //发起请求
     __weak typeof(self) weakSelf = self;
     AFHTTPSessionManager *manager = [self ej_requestManagerWithURLString:urlString];
+    if(cookie != nil){
+        [manager.requestSerializer setValue:cookie forHTTPHeaderField:@"Cookie"];
+    }
     switch (method) {
         case GET:
         {
@@ -217,7 +229,7 @@ static EJHttpClient *ej_sharedHttpClient = nil;
 }
 
 #pragma mark - upload image methods
-- (void)ej_requestUploadFileWithURLString:(NSString *)urlString param:(NSDictionary *)param name:(NSString *)name fileData:(NSData *)fileData fileName:(NSString *)fileName mimeType:(NSString *)miniType responseHandler:(EJHttpParamHandler)handler progress:(EJHttpProgressHandler)progressHandler{
+- (void)ej_requestUploadFileWithURLString:(NSString *)urlString param:(NSDictionary *)param name:(NSString *)name fileData:(NSData *)fileData fileName:(NSString *)fileName mimeType:(NSString *)miniType responseHandler:(EJHttpParamHandler)handler progress:(EJHttpUploadProgressHandler)progressHandler{
     if(urlString.length==0){
         NSLog(@"###WARNING：URL IS NULL !!!");
         if(handler){
@@ -249,6 +261,108 @@ static EJHttpClient *ej_sharedHttpClient = nil;
         progressHandler(uploadTask.countOfBytesSent,uploadTask.countOfBytesExpectedToSend);
     }
 }
+
+- (void)ej_requestUploadMultipleFilesWithURLString:(NSString *)urlString param:(NSDictionary *)param names:(NSArray *)names fileDatas:(NSArray *)fileDatas fileNames:(NSArray *)fileNames mimeType:(NSArray *)miniTypes responseHandler:(EJHttpParamHandler)handler progress:(EJHttpUploadProgressHandler)progressHandler{
+    if(urlString.length==0){
+        NSLog(@"###WARNING：URL IS NULL !!!");
+        if(handler){
+            handler(nil,nil,NO);
+        }
+        return;
+    }
+    NSInteger count = fileDatas.count;
+    if(names.count<count){
+        NSLog(@"upload file error! names count incorrect!");
+        if(handler){
+            handler(nil,nil,NO);
+        }
+        return;
+    }
+    if(fileNames.count<count){
+        NSLog(@"upload file error! fileNames count incorrect!");
+        if(handler){
+            handler(nil,nil,NO);
+        }
+        return;
+    }
+    if(miniTypes.count<count){
+        NSLog(@"upload file error! miniTypes count incorrect!");
+        if(handler){
+            handler(nil,nil,NO);
+        }
+        return;
+    }
+    NSDictionary *bodyParam = [self ej_bodyParamWithRequestParam:param];
+    NSLog(@"###Start Request URL:%@",urlString);
+    NSLog(@"###Start Request Param:%@",bodyParam.description);
+    NSLog(@"###Start Request filenames:%@",fileNames);
+    
+    //发起请求
+    __weak typeof(self) weakSelf = self;
+    AFHTTPSessionManager *manager = [self ej_requestUploadFileManagerWithURLString:urlString];
+    NSURLSessionDataTask *uploadTask = [manager POST:urlString parameters:bodyParam constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+        for(int i=0; i< fileDatas.count; i++){
+            NSData *fileData = fileDatas[i];
+            NSString *name = names[i];
+            NSString *fileName = fileNames[i];
+            NSString *miniType = miniTypes[i];
+            [formData appendPartWithFileData:fileData name:name fileName:fileName mimeType:miniType];
+        }
+    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
+        if(handler){
+            [weakSelf ej_handlerResponseParam:responseObject task:task withError:nil responseHandler:handler];
+        }
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if(handler){
+            [weakSelf ej_handlerResponseParam:nil task:task withError:error responseHandler:handler];
+        }
+    }];
+    
+    if(progressHandler){
+        progressHandler(uploadTask.countOfBytesSent,uploadTask.countOfBytesExpectedToSend);
+    }
+}
+
+- (NSURLSessionDownloadTask *)ej_requestDownloadFileWithURLString:(NSString *)urlString saveFilePath:(NSString *)saveFilePath progress:(EJHttpDownloadProgressHandler)progressHandler completedHandler:(EJHttpDownloadCompletedHandler)completedHandler{
+    if(urlString.length==0){
+        NSLog(@"###WARNING：URL IS NULL !!!");
+        if(completedHandler){
+            completedHandler(nil,nil,nil);
+        }
+        return nil;
+    }
+    
+    NSURLRequest *downloadRequest = [NSURLRequest requestWithURL:[NSURLRequest requestWithURL:urlString]];
+    
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];
+    
+    //发起请求
+    __weak typeof(self) weakSelf = self;
+    NSURLSessionDownloadTask *downloadTask =  [manager downloadTaskWithRequest:downloadRequest progress:nil destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
+        //- block的返回值, 要求返回一个URL, 返回的这个URL就是文件的位置的路径
+        if(saveFilePath.length>0){
+            return [NSURL fileURLWithPath:saveFilePath];
+        }
+        //默认放在缓存目录下。
+        NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+        NSString *path = [documentPath stringByAppendingPathComponent:response.suggestedFilename];
+        return [NSURL fileURLWithPath:path];
+    } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
+        //设置下载完成操作
+        if(completedHandler){
+            completedHandler(response,filePath,error);
+        }
+    }];
+    
+    //进度信息
+    if(progressHandler){
+        progressHandler(downloadTask.countOfBytesReceived,downloadTask.countOfBytesExpectedToReceive);
+    }
+    
+    return downloadTask;
+}
+
 
 #pragma mark - object response methods
 - (void)ej_handleSuccessResultWithRequest:(id<EJHttpRequestDelegate>)request responseObject:(id)responseObject   task:task responseHandler:(EJHttpHandler)handler commonResponseHandler:(EJHttpCommonHandler)cmnHandler{
@@ -343,10 +457,12 @@ static EJHttpClient *ej_sharedHttpClient = nil;
         
         //错误提示
          if(error.code != NSURLErrorCancelled){
-             BOOL status = [self ej_checkNetworkStatus];
-             if(status){
-                 //有网络，服务器错误，必弹Error
-                 [self ej_showErrorMessage:@"请求服务器超时，请稍后再试！" withRequest:request response:nil];
+             if(request && [request ej_showErrorMessage]){
+                 BOOL status = [self ej_checkNetworkStatus];
+                 if(status){
+                     //有网络，服务器错误，必弹Error
+                     [self ej_showErrorMessage:@"请求服务器超时，请稍后再试！" withRequest:request response:nil];
+                 }
              }
              //Loading符消失
              [self ej_dismissLoadingWithRequest:request];
@@ -405,6 +521,7 @@ static EJHttpClient *ej_sharedHttpClient = nil;
     }else{
         manager.requestSerializer = [AFJSONRequestSerializer serializer];
     }
+    manager.requestSerializer.HTTPShouldHandleCookies = NO; //不自动传输cookie
     //设置超时时间
     [manager.requestSerializer willChangeValueForKey:NSStringFromSelector(@selector(timeoutInterval))];
     manager.requestSerializer.timeoutInterval = 20.0;
@@ -489,30 +606,52 @@ static EJHttpClient *ej_sharedHttpClient = nil;
 
 #pragma mark - Loading methods
 - (void)ej_showLoadingWithRequest:(id<EJHttpRequestDelegate>)request{
-    if([request ej_showLoading]){
+    if(request && [request ej_showLoading]){
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
         dispatch_async(dispatch_get_main_queue(), ^{
             Class loadingViewClass = NSClassFromString(self.ej_loadingViewClassName);
             if(loadingViewClass){
                 EJLoadingView *loading = [loadingViewClass new];
                 loading.ej_loadingMsg = [request ej_loadingMessage];
-                [loading ej_showInView:[request ej_loadingContainerView]];
-                NSString *hashString = [NSString stringWithFormat:@"%ld",request.hash];
-                [self.ej_loadingDict setObject:[request ej_loadingContainerView] forKey:hashString];
+                UIView *containerView = [request ej_loadingContainerView];
+                [loading ej_showInView:containerView];
+                if(containerView){
+                    NSString *hashString = [NSString stringWithFormat:@"%ld",request.hash];
+                    [self.ej_loadingDict setObject:containerView forKey:hashString];
+                }
             }
         });
     }
 }
 
 - (void)ej_dismissLoadingWithRequest:(id<EJHttpRequestDelegate>)request{
-    if([request ej_showLoading] && [request ej_endLoadingWhenFinished]){
+    if(request && [request ej_showLoading] && [request ej_endLoadingWhenFinished]){
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         dispatch_async(dispatch_get_main_queue(), ^{
             NSString *hashString = [NSString stringWithFormat:@"%ld",request.hash];
             UIView *containerView = [self.ej_loadingDict objectForKey:hashString];
-            EJLoadingView *loading =  [EJLoadingView ej_loadingInContainerView:containerView];
-            [loading ej_dismiss];
-            [self.ej_loadingDict removeObjectForKey:hashString];
+            if(containerView){
+                EJLoadingView *loading =  [EJLoadingView ej_loadingInContainerView:containerView];
+                [loading ej_dismiss];
+                [self.ej_loadingDict removeObjectForKey:hashString];
+            }
+        });
+    }
+}
+
+//如果取消请求，并且该请求有加载符，在需要隐藏掉原来请求的加载符
+- (void)ej_dismissLoadingWithCancelRequest:(id<EJHttpRequestDelegate>)request{
+    if(request && [request ej_showLoading]){
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            for(NSString *key in self.ej_loadingDict.allKeys) {
+                UIView *containerView = [self.ej_loadingDict objectForKey:key];
+                if(containerView.class == [request ej_loadingContainerView].class){
+                    EJLoadingView *loading =  [EJLoadingView ej_loadingInContainerView:containerView];
+                    [loading ej_dismiss];
+                    [self.ej_loadingDict removeObjectForKey:key];
+                }
+            }
         });
     }
 }

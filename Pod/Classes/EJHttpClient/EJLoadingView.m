@@ -43,13 +43,14 @@
 
 - (void)ej_dismiss{
     [self ej_stopAnimation];
-    [UIView animateWithDuration:0.3 animations:^{
-        self.alpha = 0.0;
-    } completion:^(BOOL finished) {
-        if(finished){
-            [self removeFromSuperview];
-        }
-    }];
+    [self removeFromSuperview];
+//    [UIView animateWithDuration:0.3 animations:^{
+//        self.alpha = 0.0;
+//    } completion:^(BOOL finished) {
+//        if(finished){
+//            [self removeFromSuperview];
+//        }
+//    }];
 }
 
 #pragma mark - subclass can override

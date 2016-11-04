@@ -23,4 +23,6 @@
 - (BOOL)ej_showErrorMessage;   //是否显示错误信息
 - (BOOL)ej_ignoreDuplicateRequest;     //是否忽略重复请求
 
+- (NSString *)ej_cookie;       //请求要带的cookie信息，默认是nil
+
 @end
